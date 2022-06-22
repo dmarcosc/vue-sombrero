@@ -6,7 +6,7 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: "/vite/",
+  base: "/vue-sombrero/",
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

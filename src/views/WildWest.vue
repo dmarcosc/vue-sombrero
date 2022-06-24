@@ -5,10 +5,10 @@
       <div class="battleground">
         <div class="bullets">
           <div class="ammo">
-            <img v-for="items in userBullets" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
           </div>
           <div>
-            <img v-for="items in enemyBullets" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
           </div>
         </div>
         <div class="characters">
@@ -16,7 +16,9 @@
           <img src="@/assets/images/bandit.png" alt="bandit" class="avatar enemy">
         </div>
       </div>
-      <h2>Actions:</h2>
+      <div class="panel">
+        <div style="display: flex"><span class="text">Hello homiefella</span></div>
+      </div>
       <div class="buttons">
         <button @click="startRound('shoot')" :disabled="!!result">SHOOT</button>
         <button @click="startRound('reload')" :disabled="!!result">RELOAD</button>
@@ -33,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { randomIntFromInterval } from '@/utils/utils';
+import { randomIntFromInterval } from '../utils/utils';
 import { computed, ref } from 'vue';
 
   const round = ref(0)
@@ -171,6 +173,39 @@ main{
   flex-direction: column;
   justify-content: space-between;
   padding: 0px 10px 15px 10px;
+}
+.panel{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color:bisque;
+}
+.text {
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid orange; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  font-family:monospace;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret .75s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange; }
 }
 .buttons button {
   font-size: 16px;

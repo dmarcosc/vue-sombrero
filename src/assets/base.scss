@@ -71,4 +71,19 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#app{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.app{
+  background: url("./images/wpaper.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
 }

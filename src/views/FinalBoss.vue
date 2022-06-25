@@ -6,15 +6,15 @@
         <span class="result">{{ textResult }}</span>
         <div class="bullets">
           <div class="ammo">
-            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
           </div>
-          <!-- <div>
-            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
-          </div> -->
+          <div>
+            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
+          </div>
         </div>
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img src="@/assets/images/samurai.png" alt="bandit" class="avatar enemy">
+          <img src="@/assets/images/demon1.png" alt="bandit" class="avatar enemy">
         </div>
       </div>
       <div class="panel">
@@ -26,7 +26,7 @@
         <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
         <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
         <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/finalBoss')" >NEXT</button>
+        <!-- <button v-if="result === 'W'" @click="$router.push('/endBoss')" >NEXT</button> -->
       </div>
     </div>
   </main>
@@ -37,20 +37,20 @@ import { computed, ref } from 'vue';
 import { randomIntFromInterval } from '../utils/utils';
 
   const round = ref(0)
-  const dialog = ref('My bullets hide in the shadows')
+  const dialog = ref("You can't beat me mortal")
   const textResult = ref('')
 
   const result = computed(() => {
     if (!isUserAlive.value && !isEnemyAlive.value ) {
-      dialog.value = "My duty..."
+      dialog.value = "Fair enough"
       textResult.value = "DRAW"
       return 'D'
     } else if (!isUserAlive.value && isEnemyAlive.value ) {
-      dialog.value = "You died with honor"
+      dialog.value = "You are nothing"
       textResult.value = "YOU LOSE"
       return 'L'
     } else if (isUserAlive.value && !isEnemyAlive.value ){
-      dialog.value = "Now i am free"
+      dialog.value = "This can't be"
       textResult.value = "YOU WON"
       return 'W'
     }
@@ -61,7 +61,7 @@ import { randomIntFromInterval } from '../utils/utils';
 const startRound = async (userAction: string) => {
   round.value++
   const hasBullets = userBullets.value
-  const enemyAction : string = performEnemyAction()
+  const enemyAction : string = performEnemyAction(userAction)
   performUserAction(userAction)
   if (userAction === 'lucky') {
     isEnemyAlive.value = false
@@ -91,7 +91,7 @@ const startRound = async (userAction: string) => {
 const performUserAction = async (action: string) => {
   switch(action) {
     case 'shoot':
-      if(!userBullets.value) dialog.value = "Shame"
+      if(!userBullets.value) dialog.value = "????"
       removeUserBullet()
       break
     case 'reload':
@@ -107,7 +107,7 @@ const performUserAction = async (action: string) => {
 }
 
 //// enemy stuff ////
-  const enemyBullets = ref(4)
+  const enemyBullets = ref(1)
   const isEnemyAlive = ref(true)
 
   const addEnemyBullet = () => {
@@ -117,12 +117,11 @@ const performUserAction = async (action: string) => {
     enemyBullets.value > 0 && enemyBullets.value --
   }
 
-const performEnemyAction = () : string => {
+const performEnemyAction = (userAction: string) : string => {
   let action: number
-  if (enemyBullets.value === 0) action = 0
-  else if(userBullets.value > 0) {
-    action = 2
-  } else {
+  if (userAction === 'shoot') action = 2
+  else if (enemyBullets.value === 0) action = 0
+  else {
     action = randomIntFromInterval(0,2)
   }
   switch(action) {
@@ -170,16 +169,18 @@ main{
 .characters {
   display: flex;
   justify-content: space-between;
+  align-items: end;
 }
 .avatar{
   height: 80px;
 }
 .enemy{
   align-self: flex-end;
+  height: 150px;
 }
 .battleground{
   height:215px;
-  background: url('../assets/images/sakura.jpg');
+  background: url('../assets/images/inferno.webp');
   background-repeat: no-repeat;
   background-position-y: bottom;
   background-size: cover;
@@ -189,13 +190,13 @@ main{
   padding: 0px 10px 15px 10px;
 }
 .result{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   height: 100%;
   font-size: 40px;
   font-weight: 500;
-  color: darkred;
+  color: #fff;
 }
 .panel{
   display: flex;
@@ -205,10 +206,10 @@ main{
   margin: 5px;
   border-radius: 5px;
   border: 1px solid black;
-  background-color:bisque;
+  background-color:#7c1608;
 }
 .text {
-
+  color: #fff;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: .15em solid orange; /* The typwriter cursor */
   white-space: nowrap; /* Keeps the content on a single line */
@@ -229,7 +230,7 @@ main{
 /* The typewriter cursor effect */
 @keyframes blink-caret {
   from, to { border-color: transparent }
-  50% { border-color: orange; }
+  50% { border-color: #fff; }
 }
 .buttons {
     display: flex;

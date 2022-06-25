@@ -3,45 +3,60 @@
 <main>
     <div class="wrapper">
       <div class="battleground">
+        <span class="result">{{ textResult }}</span>
         <div class="bullets">
           <div class="ammo">
-            <img v-for="items in userBullets" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
           </div>
           <div>
-            <img v-for="items in enemyBullets" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
           </div>
         </div>
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img src="@/assets/images/bandit.png" alt="bandit" class="avatar enemy">
+          <img :src="enemyImg" alt="bandit" class="avatar enemy">
         </div>
       </div>
-      <h2>Actions:</h2>
+      <div class="panel">
+        <div style="display: flex"><span class="text">{{ dialog }}</span></div>
+      </div>
       <div class="buttons">
         <button @click="startRound('shoot')" :disabled="!!result">SHOOT</button>
         <button @click="startRound('reload')" :disabled="!!result">RELOAD</button>
-        <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
+        <button @click="startRound('dodge')" :disabled="!!result || dodgeDisabled">DODGE</button>
         <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
-        <button v-if="result !== ''" @click="$router.go(0)" >RESTART</button>
-      </div>
-      <hr>
-      <div>
-        result: {{ result }}
+        <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
+        <button v-if="result === 'W'" @click="$router.push('/sakura')" >NEXT</button>
       </div>
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
-import { randomIntFromInterval } from '@/utils/utils';
 import { computed, ref } from 'vue';
+import lich from '../assets/images/lich.png';
+import undead from '../assets/images/skeleton.png';
+import { randomIntFromInterval } from '../utils/utils';
 
   const round = ref(0)
+  const dialog = ref('Greetings warm one')
+  const textResult = ref('')
+  const dodgeDisabled = ref(false)
 
   const result = computed(() => {
-    if (!isUserAlive.value && !isEnemyAlive.value ) return 'draw'
-    else if (!isUserAlive.value && isEnemyAlive.value ) return 'lose'
-    else if (isUserAlive.value && !isEnemyAlive.value ) return 'win'
+    if (!isUserAlive.value && !isEnemyAlive.value ) {
+      dialog.value = "I will raise again..."
+      textResult.value = "DRAW"
+      return 'D'
+    } else if (!isUserAlive.value && isEnemyAlive.value ) {
+      dialog.value = "Embrace the cold"
+      textResult.value = "YOU LOSE"
+      return 'L'
+    } else if (isUserAlive.value && !isEnemyAlive.value ){
+      dialog.value = "My torture continues..."
+      textResult.value = "YOU WON"
+      return 'W'
+    }
     else return ''
   })
 
@@ -52,7 +67,13 @@ const startRound = async (userAction: string) => {
   const enemyAction : string = performEnemyAction()
   performUserAction(userAction)
   if (userAction === 'lucky') {
-    isEnemyAlive.value = false
+    if(extraEnemylife.value === true) {
+      extraEnemylife.value = false
+      enemyImg.value = undead
+      dialog.value = "I am already dead fool"
+    } else {
+      isEnemyAlive.value = false
+    }
   } else if ((userAction === 'reload' || (userAction === 'shoot' && !hasBullets)) && enemyAction === 'shoot') {
     isUserAlive.value = false
   } else if (userAction === 'shoot' && hasBullets) {
@@ -60,7 +81,13 @@ const startRound = async (userAction: string) => {
       isEnemyAlive.value = false
       isUserAlive.value = false
     } else if ( enemyAction === 'reload') {
-      isEnemyAlive.value = false
+      if(extraEnemylife.value === true) {
+        extraEnemylife.value = false
+        enemyImg.value = undead
+        dialog.value = "I am already dead fool"
+      } else {
+        isEnemyAlive.value = false
+      }
     }
   }
 
@@ -79,12 +106,15 @@ const startRound = async (userAction: string) => {
 const performUserAction = async (action: string) => {
   switch(action) {
     case 'shoot':
+      if(!userBullets.value) dialog.value = "What was that ?"
       removeUserBullet()
       break
     case 'reload':
       addUserBullet()
       break
     case 'dodge':
+      dodgeDisabled.value = !dodgeDisabled.value
+      dialog.value = "Don't jump in a cementery"
       break
     case 'lucky':
       break
@@ -94,8 +124,10 @@ const performUserAction = async (action: string) => {
 }
 
 //// enemy stuff ////
+  const extraEnemylife = ref(true)
   const enemyBullets = ref(0)
   const isEnemyAlive = ref(true)
+  const enemyImg = ref(lich)
 
   const addEnemyBullet = () => {
     enemyBullets.value < 5 && enemyBullets.value++
@@ -108,7 +140,7 @@ const performEnemyAction = () : string => {
   let action: number
   if (enemyBullets.value === 0) action = 0
   else {
-    action = randomIntFromInterval(1,2)
+    action = randomIntFromInterval(0,2)
   }
   switch(action) {
     case 0:
@@ -140,7 +172,6 @@ main{
   min-height: 100vh;
 }
 .wrapper{
-  border: 1px solid rgba(165, 42, 42, 0.548);
   padding:5px;
   max-width: 700px;
   width:100%;
@@ -156,25 +187,82 @@ main{
 .characters {
   display: flex;
   justify-content: space-between;
+  align-items: end;
 }
 .avatar{
   height: 80px;
 }
 .enemy{
   align-self: flex-end;
+  height:115px;
 }
 .battleground{
   height:215px;
   background: url('../assets/images/graveyard.jpg');
   background-repeat: no-repeat;
+  background-position-y: bottom;
+  background-size: cover;
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
   padding: 0px 10px 15px 10px;
 }
+.result{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  font-size: 40px;
+  font-weight: 500;
+  color: darkred;
+}
+.panel{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color:rgb(21, 105, 56);
+}
+.text {
+  color: #a2cff7;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid #a2cff7; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  font-family:monospace;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret .75s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #a2cff7; }
+}
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .buttons button {
   font-size: 16px;
   margin: 5px;
   cursor: pointer;
+  width: 180px;
+  height: 46px;
+  border-radius: 10px;
 }
+
+
 </style>

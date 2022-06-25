@@ -6,15 +6,15 @@
         <span class="result">{{ textResult }}</span>
         <div class="bullets">
           <div class="ammo">
-            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
+            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
           </div>
-          <!-- <div>
-            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet.svg" alt="Bullet">
-          </div> -->
+          <div>
+            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
+          </div>
         </div>
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img src="@/assets/images/samurai.png" alt="bandit" class="avatar enemy">
+          <img src="@/assets/images/bandit.png" alt="bandit" class="avatar enemy">
         </div>
       </div>
       <div class="panel">
@@ -26,7 +26,7 @@
         <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
         <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
         <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/finalBoss')" >NEXT</button>
+        <button v-if="result === 'W'" @click="$router.push('/graveyard')" >NEXT</button>
       </div>
     </div>
   </main>
@@ -34,23 +34,25 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { randomIntFromInterval } from '../utils/utils';
 
+  const router = useRouter()
   const round = ref(0)
-  const dialog = ref('My bullets hide in the shadows')
+  const dialog = ref('My gun is always ready')
   const textResult = ref('')
 
   const result = computed(() => {
     if (!isUserAlive.value && !isEnemyAlive.value ) {
-      dialog.value = "My duty..."
+      dialog.value = "Taking you with me"
       textResult.value = "DRAW"
       return 'D'
     } else if (!isUserAlive.value && isEnemyAlive.value ) {
-      dialog.value = "You died with honor"
+      dialog.value = "That was easy"
       textResult.value = "YOU LOSE"
       return 'L'
     } else if (isUserAlive.value && !isEnemyAlive.value ){
-      dialog.value = "Now i am free"
+      dialog.value = "But.. I was brave"
       textResult.value = "YOU WON"
       return 'W'
     }
@@ -91,7 +93,7 @@ const startRound = async (userAction: string) => {
 const performUserAction = async (action: string) => {
   switch(action) {
     case 'shoot':
-      if(!userBullets.value) dialog.value = "Shame"
+      if(!userBullets.value) dialog.value = "What was that ?"
       removeUserBullet()
       break
     case 'reload':
@@ -107,7 +109,7 @@ const performUserAction = async (action: string) => {
 }
 
 //// enemy stuff ////
-  const enemyBullets = ref(4)
+  const enemyBullets = ref(2)
   const isEnemyAlive = ref(true)
 
   const addEnemyBullet = () => {
@@ -179,7 +181,7 @@ main{
 }
 .battleground{
   height:215px;
-  background: url('../assets/images/sakura.jpg');
+  background: url('../assets/images/darkspace.webp');
   background-repeat: no-repeat;
   background-position-y: bottom;
   background-size: cover;
@@ -205,12 +207,12 @@ main{
   margin: 5px;
   border-radius: 5px;
   border: 1px solid black;
-  background-color:bisque;
+  background-color:rgb(28 40 92);
 }
 .text {
-
+  color: #a2cff7;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: .15em solid orange; /* The typwriter cursor */
+  border-right: .15em solid #a2cff7; /* The typwriter cursor */
   white-space: nowrap; /* Keeps the content on a single line */
   margin: 0 auto; /* Gives that scrolling effect as the typing happens */
   letter-spacing: .15em; /* Adjust as needed */
@@ -229,7 +231,7 @@ main{
 /* The typewriter cursor effect */
 @keyframes blink-caret {
   from, to { border-color: transparent }
-  50% { border-color: orange; }
+  50% { border-color: #a2cff7; }
 }
 .buttons {
     display: flex;

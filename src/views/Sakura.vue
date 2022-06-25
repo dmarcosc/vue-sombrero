@@ -120,9 +120,7 @@ const performUserAction = async (action: string) => {
 const performEnemyAction = () : string => {
   let action: number
   if (enemyBullets.value === 0) action = 0
-  else if(userBullets.value > 0) {
-    action = 2
-  } else {
+  else {
     action = randomIntFromInterval(0,2)
   }
   switch(action) {

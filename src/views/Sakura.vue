@@ -26,7 +26,7 @@
         <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
         <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
         <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/finalBoss')" >NEXT</button>
+        <button v-if="result === 'W'" @click="$router.push('/graveyard')" >NEXT</button>
       </div>
     </div>
   </main>

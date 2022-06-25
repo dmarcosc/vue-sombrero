@@ -14,7 +14,7 @@
         </div>
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img src="@/assets/images/bandit.png" alt="bandit" class="avatar enemy">
+          <img src="@/assets/images/astronaut.png" alt="bandit" class="avatar enemy">
         </div>
       </div>
       <div class="panel">
@@ -26,7 +26,7 @@
         <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
         <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
         <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/graveyard')" >NEXT</button>
+        <button v-if="result === 'W'" @click="$router.push('/sakura')" >NEXT</button>
       </div>
     </div>
   </main>

@@ -92,7 +92,7 @@ const performUserAction = async (action: string) => {
   switch(action) {
     case 'shoot':
       if(!userBullets.value) dialog.value = "????"
-      removeUserBullet()
+      if(enemyBullets.value > 1)removeUserBullet()
       break
     case 'reload':
       addUserBullet()

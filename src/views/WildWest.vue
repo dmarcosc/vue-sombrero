@@ -30,7 +30,7 @@
           <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
           <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
-        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/wildwest')">RESTART</WButton>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="reset">RESTART</WButton>
         <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/spacetrip')" >NEXT</WButton>
       </div>
     </div>
@@ -48,9 +48,17 @@ import { randomIntFromInterval } from '../utils/utils';
   const round = ref(0)
   const dialog = ref('Hello homiefella')
   const textResult = ref('')
-  const log = () => {
-    console.log('hi')
+
+  const reset = () => {
+    round.value = 0
+    dialog.value = "You again ?"
+    textResult.value = ''
+    isUserAlive.value = true
+    isEnemyAlive.value = true
+    userBullets.value = 0
+    enemyBullets.value = 0
   }
+
   const result = computed(() => {
     if (!isUserAlive.value && !isEnemyAlive.value ) {
       dialog.value = "HA! took you with me"

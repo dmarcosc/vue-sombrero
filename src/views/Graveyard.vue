@@ -1,7 +1,6 @@
 
 <template>
 <main>
-    <HomeButton @click="$router.push('/')"/>
     <div class="wrapper">
       <div class="battleground">
         <span class="result">{{ textResult }}</span>
@@ -16,6 +15,7 @@
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="hero" class="avatar">
           <img :src="enemyImg" alt="lich" class="avatar enemy">
+          <img v-if="!isEnemyAlive" :src="explosion" alt="lich" class="avatar explosion">
         </div>
       </div>
       <div class="panel">
@@ -23,12 +23,12 @@
       </div>
       <div class="buttons">
         <div class="pair">
-          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/revolver.png'), auto !important;">SHOOT</WButton>
-          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/bullet.png'), auto !important;">RELOAD</WButton>
+          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result || disableAll" style=" cursor: url('/vue-sombrero/src/assets/images/revolver.png'), auto !important;">SHOOT</WButton>
+          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result || disableAll" style=" cursor: url('/vue-sombrero/src/assets/images/bullet.png'), auto !important;">RELOAD</WButton>
         </div>
         <div class="pair">
-          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
-          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
+          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result || disableAll" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
+          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5  || disableAll"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
         <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/wildwest')" >RESTART</WButton>
         <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/finalBoss')" >NEXT</WButton>
@@ -38,17 +38,22 @@
 </template>
 
 <script lang="ts" setup>
+import lichDeath from '@/assets/images/lichDeath.gif';
+import explosion from '@/assets/images/lich_explosion.gif';
 import dyingGif from '@/assets/images/necro_muerte.gif';
 import resting from '@/assets/images/resting.png';
+import resurrect from '@/assets/images/resurrect.gif';
+import WButton from '@/components/WButton.vue';
 import { computed, ref } from 'vue';
 import lich from '../assets/images/lich.png';
 import { randomIntFromInterval } from '../utils/utils';
-import WButton from '@/components/WButton.vue';
 
   const round = ref(0)
   const dialog = ref('Greetings warm one')
   const textResult = ref('')
   const dodgeDisabled = ref(false)
+  const animations = ref([lichDeath, resurrect, resting])
+  const disableAll = ref(false)
 
   const result = computed(() => {
     if (!isUserAlive.value && !isEnemyAlive.value ) {
@@ -80,8 +85,20 @@ const startRound = async (userAction: string) => {
     userBullets.value = 0
     if(extraEnemylife.value === true) {
       extraEnemylife.value = false
-      enemyImg.value = resting
-      dialog.value = "I am already dead fool"
+      enemyImg.value = animations.value[0];
+      disableAll.value = true
+      let i = 1;
+      setInterval(() => {
+        if(i<3) { 
+        enemyImg.value = animations.value[i];
+        i++
+        } if (i===2) {
+          disableAll.value = false
+          dialog.value = "I am already dead fool"
+        } else {
+          clearInterval
+        }
+      }, 2000);
     } else {
       isEnemyAlive.value = false
     }
@@ -94,7 +111,20 @@ const startRound = async (userAction: string) => {
     } else if ( enemyAction === 'reload') {
       if(extraEnemylife.value === true) {
         extraEnemylife.value = false
-        enemyImg.value = resting
+        enemyImg.value = animations.value[0];
+        disableAll.value = true
+        let i = 1;
+        setInterval(() => {
+          if(i<3) { 
+          enemyImg.value = animations.value[i];
+          i++
+          } if (i===2) {
+          disableAll.value = false
+          dialog.value = "I am already dead fool"
+          } else {
+            clearInterval
+          }
+        }, 2000);
         dialog.value = "I am already dead fool"
       } else {
         isEnemyAlive.value = false
@@ -210,6 +240,11 @@ main{
   align-self: flex-end;
   transform: translatey(0px);
 	animation: float 2s ease-in-out infinite;
+}
+.explosion {
+    position: absolute;
+    right: 18px;
+
 }
 .deadEnemy{
     align-self: flex-end;

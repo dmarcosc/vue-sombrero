@@ -30,7 +30,7 @@
           <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
           <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
-        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/')" >RESTART</WButton>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/wildwest')" >RESTART</WButton>
         <!-- <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/finalBoss')" >NEXT</WButton> -->
       </div>
     </div>

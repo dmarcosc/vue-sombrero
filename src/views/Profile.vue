@@ -37,6 +37,7 @@ main{
   gap:15px;
   background-color: bisque;
   padding: 25px;
+  margin: 0px 10px;
   border-radius: 10px;
   
   span {

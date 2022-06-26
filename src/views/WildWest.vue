@@ -1,7 +1,6 @@
 
 <template>
 <main>
-  <HomeButton @click="$router.push('/')"/>
     <div class="wrapper">
       <div class="battleground">
         <span class="result">{{ textResult }}</span>
@@ -38,7 +37,6 @@
 </template>
 
 <script lang="ts" setup>
-import HomeButton from '@/components/HomeButton.vue';
 import WButton from '@/components/WButton.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';

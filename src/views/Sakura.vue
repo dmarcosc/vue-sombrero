@@ -1,7 +1,6 @@
 
 <template>
 <main>
-    <HomeButton @click="$router.push('/')"/>
     <div class="wrapper">
       <div class="battleground">
         <span class="result">{{ textResult }}</span>

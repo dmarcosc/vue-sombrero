@@ -11,6 +11,7 @@
 <style lang="scss" scoped>
 .home-nav{
   cursor: pointer !important;
+  z-index: 99;
   top:5px;
   left: 5px;
   position: absolute;

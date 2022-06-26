@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <HomeButton @click="$router.push('/')"/>
+    <HomeButton @click="$router.push('/')" v-if="$route.name!=='home' && $route.name !== 'profile'"/>
     <RouterView />
   </div>
 </template>

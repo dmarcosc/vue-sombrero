@@ -6,15 +6,15 @@
         <span class="result">{{ textResult }}</span>
         <div class="bullets">
           <div class="ammo">
-            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
+            <img v-for="items in userBullets" :key="items" src="@/assets/images/bullet.png" alt="Bullet">
           </div>
           <div>
-            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet_white.svg" alt="Bullet">
+            <img v-for="items in enemyBullets" :key="items" src="@/assets/images/bullet.png" alt="Bullet">
           </div>
         </div>
         <div class="characters">
-          <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img src="@/assets/images/astronaut.png" alt="bandit" class="avatar enemy">
+          <img src="@/assets/images/cowboy.png" alt="hero" class="avatar">
+          <img src="@/assets/images/astronaut.png" alt="coward" class="avatar enemy">
         </div>
       </div>
       <div class="panel">
@@ -22,12 +22,12 @@
       </div>
       <div class="buttons">
         <div class="pair">
-          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result" >SHOOT</WButton>
-          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result" >RELOAD</WButton>
+          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/revolver.png'), auto !important;">SHOOT</WButton>
+          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/bullet.png'), auto !important;">RELOAD</WButton>
         </div>
         <div class="pair">
-          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" >DODGE</WButton>
-          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  >LUCKY SHOT</WButton>
+          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
+          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
         <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/')" >RESTART</WButton>
         <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/sakura')" >NEXT</WButton>
@@ -197,11 +197,11 @@ main{
 }
 .result{
   display: flex;
-  top: 35px;
+  top: 15px;
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 35px;
+  font-size: 40px;
   font-weight: 500;
   color: darkred;
 }

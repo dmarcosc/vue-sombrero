@@ -13,7 +13,7 @@ const props = defineProps({disabled: Boolean, block: Boolean})
   width:100%;
   max-width:180px;
 }
-.button button{
+.button button {
   width:100%;
   min-width:160px;
   height: 70px;

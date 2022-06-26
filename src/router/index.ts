@@ -1,5 +1,7 @@
-import Graveyard from '@/views/Graveyard.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import Graveyard from '@/views/Graveyard.vue'
+import Home from '../views/Home.vue'
+import Profile from '../views/Profile.vue'
 import WildWest from '../views/WildWest.vue'
 import Sakura from '../views/Sakura.vue'
 import FinalBoss from '../views/FinalBoss.vue'
@@ -10,6 +12,16 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile
+    },
+    {
+      path: '/wildWest',
       name: 'west',
       component: WildWest
     },

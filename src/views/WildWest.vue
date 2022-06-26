@@ -1,6 +1,7 @@
 
 <template>
 <main>
+  <HomeButton @click="$router.push('/')"/>
     <div class="wrapper">
       <div class="battleground">
         <span class="result">{{ textResult }}</span>
@@ -29,8 +30,8 @@
           <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
           <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
-        <WButton :block="true" v-if="result === 'L' || result === 'D'" @click="$router.go(0)" >RESTART</WButton>
-        <WButton :block="true" v-if="result === 'W'" @click="$router.push('/spacetrip')" >NEXT</WButton>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.go(0)" >RESTART</WButton>
+        <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/spacetrip')" >NEXT</WButton>
       </div>
     </div>
   </main>
@@ -41,20 +42,25 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { randomIntFromInterval } from '../utils/utils';
 import WButton from '@/components/WButton.vue';
+import HomeButton from '@/components/HomeButton.vue';
 
   const router = useRouter()
   const round = ref(0)
   const dialog = ref('Hello homiefella')
   const textResult = ref('')
-
+  const log = () => {
+    console.log('hi')
+  }
   const result = computed(() => {
     if (!isUserAlive.value && !isEnemyAlive.value ) {
       dialog.value = "HA! took you with me"
       textResult.value = "DRAW"
+      localStorage.setItem('deaths', (+localStorage.getItem('deaths')! + 1).toString());
       return 'D'
     } else if (!isUserAlive.value && isEnemyAlive.value ) {
       dialog.value = "Not even close"
       textResult.value = "YOU LOSE"
+      localStorage.setItem('deaths', (+localStorage.getItem('deaths')! + 1).toString());
       return 'L'
     } else if (isUserAlive.value && !isEnemyAlive.value ){
       dialog.value = "Impossible..."
@@ -153,6 +159,7 @@ const performEnemyAction = () : string => {
 </script>
 
 <style lang="scss" scoped>
+
 main{
   display: flex;
   justify-content: center;

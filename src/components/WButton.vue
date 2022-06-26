@@ -14,6 +14,7 @@ const props = defineProps({disabled: Boolean, block: Boolean})
   max-width:180px;
 }
 .button button {
+  cursor: pointer;
   width:100%;
   min-width:160px;
   height: 70px;

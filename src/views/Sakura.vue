@@ -1,6 +1,7 @@
 
 <template>
 <main>
+    <HomeButton @click="$router.push('/')"/>
     <div class="wrapper">
       <div class="battleground">
         <span class="result">{{ textResult }}</span>
@@ -49,10 +50,12 @@ import WButton from '@/components/WButton.vue';
     if (!isUserAlive.value && !isEnemyAlive.value ) {
       dialog.value = "My duty..."
       textResult.value = "DRAW"
+      localStorage.setItem('deaths', (+localStorage.getItem('deaths')! + 1).toString());
       return 'D'
     } else if (!isUserAlive.value && isEnemyAlive.value ) {
       dialog.value = "You died with honor"
       textResult.value = "YOU LOSE"
+      localStorage.setItem('deaths', (+localStorage.getItem('deaths')! + 1).toString());
       return 'L'
     } else if (isUserAlive.value && !isEnemyAlive.value ){
       dialog.value = "Now i am free"

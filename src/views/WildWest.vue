@@ -30,7 +30,7 @@
           <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" style=" cursor: url('/vue-sombrero/src/assets/images/shield.png'), auto !important;" >DODGE</WButton>
           <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  style="cursor: url('/vue-sombrero/src/assets/images/trebol.png'), auto !important;" >LUCKY SHOT</WButton>
         </div>
-        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.go(0)" >RESTART</WButton>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/wildwest')">RESTART</WButton>
         <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/spacetrip')" >NEXT</WButton>
       </div>
     </div>
@@ -38,11 +38,11 @@
 </template>
 
 <script lang="ts" setup>
+import HomeButton from '@/components/HomeButton.vue';
+import WButton from '@/components/WButton.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { randomIntFromInterval } from '../utils/utils';
-import WButton from '@/components/WButton.vue';
-import HomeButton from '@/components/HomeButton.vue';
 
   const router = useRouter()
   const round = ref(0)

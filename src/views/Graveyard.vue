@@ -14,29 +14,35 @@
         </div>
         <div class="characters">
           <img src="@/assets/images/cowboy.png" alt="bandit" class="avatar">
-          <img :src="enemyImg" alt="bandit" class="avatar enemy">
+          <img :src="enemyImg" alt="lich" class="avatar enemy">
         </div>
       </div>
       <div class="panel">
         <div style="display: flex"><span class="text">{{ dialog }}</span></div>
       </div>
       <div class="buttons">
-        <button @click="startRound('shoot')" :disabled="!!result">SHOOT</button>
-        <button @click="startRound('reload')" :disabled="!!result">RELOAD</button>
-        <button @click="startRound('dodge')" :disabled="!!result || dodgeDisabled">DODGE</button>
-        <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
-        <button v-if="result === 'L' || result === 'D'" @click="$router.push('/')" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/finalBoss')" >NEXT</button>
+        <div class="pair">
+          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result" >SHOOT</WButton>
+          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result" >RELOAD</WButton>
+        </div>
+        <div class="pair">
+          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" >DODGE</WButton>
+          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  >LUCKY SHOT</WButton>
+        </div>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @onClick="$router.push('/')" >RESTART</WButton>
+        <WButton :block="true" v-if="result === 'W'" @onClick="$router.push('/finalBoss')" >NEXT</WButton>
       </div>
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
+import dyingGif from '@/assets/images/necro_muerte.gif';
+import resting from '@/assets/images/resting.png';
 import { computed, ref } from 'vue';
 import lich from '../assets/images/lich.png';
-import undead from '../assets/images/skeleton.png';
 import { randomIntFromInterval } from '../utils/utils';
+import WButton from '@/components/WButton.vue';
 
   const round = ref(0)
   const dialog = ref('Greetings warm one')
@@ -55,6 +61,7 @@ import { randomIntFromInterval } from '../utils/utils';
     } else if (isUserAlive.value && !isEnemyAlive.value ){
       dialog.value = "My torture continues..."
       textResult.value = "YOU WON"
+      enemyImg.value = dyingGif
       return 'W'
     }
     else return ''
@@ -70,7 +77,7 @@ const startRound = async (userAction: string) => {
     userBullets.value = 0
     if(extraEnemylife.value === true) {
       extraEnemylife.value = false
-      enemyImg.value = undead
+      enemyImg.value = resting
       dialog.value = "I am already dead fool"
     } else {
       isEnemyAlive.value = false
@@ -84,7 +91,7 @@ const startRound = async (userAction: string) => {
     } else if ( enemyAction === 'reload') {
       if(extraEnemylife.value === true) {
         extraEnemylife.value = false
-        enemyImg.value = undead
+        enemyImg.value = resting
         dialog.value = "I am already dead fool"
       } else {
         isEnemyAlive.value = false
@@ -107,17 +114,20 @@ const startRound = async (userAction: string) => {
 const performUserAction = async (action: string) => {
   switch(action) {
     case 'shoot':
+      dodgeDisabled.value = false
       if(!userBullets.value) dialog.value = "What was that ?"
       removeUserBullet()
       break
     case 'reload':
+      dodgeDisabled.value = false
       addUserBullet()
       break
     case 'dodge':
-      dodgeDisabled.value = !dodgeDisabled.value
+      dodgeDisabled.value = true
       dialog.value = "Don't jump in a cementery"
       break
     case 'lucky':
+      dodgeDisabled.value = false
       break
     default:
       break
@@ -195,7 +205,23 @@ main{
 }
 .enemy{
   align-self: flex-end;
-  height:115px;
+  transform: translatey(0px);
+	animation: float 2s ease-in-out infinite;
+}
+.deadEnemy{
+    align-self: flex-end;
+}
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(-10px);
+	}
+	100% {
+	
+		transform: translatey(0px);
+	}
 }
 .battleground{
   height:215px;
@@ -211,9 +237,10 @@ main{
 .result{
   position: absolute;
   left: 50%;
+  top: 35px;
   transform: translateX(-50%);
   height: 100%;
-  font-size: 40px;
+  font-size: 35px;
   font-weight: 500;
   color: darkred;
 }
@@ -222,7 +249,7 @@ main{
   justify-content: center;
   align-items: center;
   height: 100px;
-  margin: 5px;
+  margin: 5px 0px;
   border-radius: 5px;
   border: 1px solid black;
   background-color:rgb(21, 105, 56);
@@ -254,15 +281,13 @@ main{
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-}
-.buttons button {
-  font-size: 16px;
-  margin: 5px;
-  cursor: pointer;
-  width: 180px;
-  height: 46px;
-  border-radius: 10px;
+    justify-content: space-between;
+    gap:15px;
+    .pair {
+      display: flex;
+      gap: 5px;
+      width: 100%;
+    }
 }
 
 

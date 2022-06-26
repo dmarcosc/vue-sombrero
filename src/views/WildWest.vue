@@ -21,12 +21,16 @@
         <div class="text-wrapper"><span class="text">{{ dialog }}</span></div>
       </div>
       <div class="buttons">
-        <button @click="startRound('shoot')" :disabled="!!result">SHOOT</button>
-        <button @click="startRound('reload')" :disabled="!!result">RELOAD</button>
-        <button @click="startRound('dodge')" :disabled="!!result">DODGE</button>
-        <button @click="startRound('lucky')" :disabled="!!result || userBullets < 5" >LUCKY SHOT</button>
-        <button v-if="result === 'L' || result === 'D'" @click="$router.go(0)" >RESTART</button>
-        <button v-if="result === 'W'" @click="$router.push('/spacetrip')" >NEXT</button>
+        <div class="pair">
+          <WButton :block="true" @onClick="startRound('shoot')" :disabled="!!result" >SHOOT</WButton>
+          <WButton :block="true" @onClick="startRound('reload')" :disabled="!!result" >RELOAD</WButton>
+        </div>
+        <div class="pair">
+          <WButton :block="true" @onClick="startRound('dodge')" :disabled="!!result" >DODGE</WButton>
+          <WButton :block="true" @onClick="startRound('lucky')" :disabled="!!result || userBullets < 5"  >LUCKY SHOT</WButton>
+        </div>
+        <WButton :block="true" v-if="result === 'L' || result === 'D'" @click="$router.go(0)" >RESTART</WButton>
+        <WButton :block="true" v-if="result === 'W'" @click="$router.push('/spacetrip')" >NEXT</WButton>
       </div>
     </div>
   </main>
@@ -36,6 +40,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { randomIntFromInterval } from '../utils/utils';
+import WButton from '@/components/WButton.vue';
 
   const router = useRouter()
   const round = ref(0)
@@ -188,10 +193,11 @@ main{
 }
 .result{
   display: flex;
+  top: 35px;
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-size: 40px;
+  font-size: 35px;
   font-weight: 500;
   color: darkred;
 }
@@ -235,16 +241,13 @@ main{
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
+    gap:15px;
+    .pair {
+      display: flex;
+      gap: 5px;
+      width: 100%;
+    }
 }
-.buttons button {
-  font-size: 16px;
-  margin: 5px;
-  cursor: pointer;
-  width: 180px;
-  height: 46px;
-  border-radius: 10px;
-}
-
 
 </style>

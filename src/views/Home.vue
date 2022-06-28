@@ -2,9 +2,8 @@
 <template>
   <main>
     <nav class="main-menu">
-      <!-- <img src="@/assets/images/rodeo.webp" alt="wanted"> -->
       <WButton :block="true" @onClick="$router.push('/wildwest')">SINGLE PLAYER</WButton>
-      <WButton :block="true" :disabled="true">VS MODE</WButton>
+      <WButton :block="true" @onClick="$router.push('/joinRoom')">VS MODE</WButton>
       <WButton :block="true" @onClick="$router.push('/profile')">PROFILE</WButton>
     </nav>
 
@@ -13,7 +12,6 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-
 import WButton from '@/components/WButton.vue';
 
     onMounted(() => {

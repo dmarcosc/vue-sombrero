@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Graveyard from '@/views/Graveyard.vue'
 import Home from '../views/Home.vue'
+import JoinRoom from '../views/JoinRoom.vue'
+import VsMode from '../views/VsMode.vue'
 import Profile from '../views/Profile.vue'
 import WildWest from '../views/WildWest.vue'
 import Sakura from '../views/Sakura.vue'
@@ -19,6 +21,17 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile
+    },
+    {
+      path: '/joinRoom',
+      name: 'joinRoom',
+      component: JoinRoom
+    },
+    {
+      path: '/vsMode',
+      name: 'vsMode',
+      component: VsMode,
+      props: true
     },
     {
       path: '/wildWest',

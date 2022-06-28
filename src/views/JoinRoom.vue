@@ -2,10 +2,10 @@
 <template>
   <main>
     <nav class="main-menu">
+      <div class="label">Create a room and share</div>
       <input type="text" v-model="room" style="height: 60px; font-size:22px;"/>
-      <WButton :block="true" @onClick="$router.push({ name: 'vsMode', params: { id: room } })" :disabled="!room">VS MODE</WButton>
+      <WButton :block="true" @onClick="$router.push({ name: 'vsMode', params: { id: room } })" :disabled="!room">START</WButton>
     </nav>
-
   </main>
 </template>
 
@@ -30,6 +30,18 @@ main{
   display: flex;
   flex-direction: column;
   gap:15px;
-  padding: 0px 10px;
+  background-color: bisque;
+  padding: 25px;
+  margin: 0px 10px;
+  border-radius: 10px;
+  input {
+    margin-bottom:40px;
+  }
+}
+.label{
+  font-size:22px;
+  color: orange;
+  font-weight: 500;
+  // background-color: bisque;
 }
 </style>
